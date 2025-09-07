@@ -1,11 +1,16 @@
 import random
 import time
 
-# Function to create a random question
+# Function to create a random question with only positive answers
 def create_question(var_min_num, var_max_num):
     var_num1 = random.randint(var_min_num, var_max_num)
     var_num2 = random.randint(var_min_num, var_max_num)
     var_operator = random.choice(["+", "-"])
+
+    if var_operator == "-":
+        # Ensure no negative results
+        var_num1, var_num2 = max(var_num1, var_num2), min(var_num1, var_num2)
+
     return f"{var_num1} {var_operator} {var_num2}"
 
 # Function to ask a question and check answer
@@ -96,6 +101,3 @@ print("--------   --------  -------")
 for i in range(var_num_questions):
     var_correct_str = "Yes" if var_correctness_list[i] else "No"
     print(f"    {i+1:<9}{var_correct_str:<9}{var_time_list[i]}s")
-
-
-
