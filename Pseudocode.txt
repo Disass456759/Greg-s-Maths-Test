@@ -1,0 +1,109 @@
+BEGIN PROGRAM
+
+DISPLAY "Welcome to Greg's Maths Test!"
+
+# ---------------- Select Difficulty ---------------- #
+REPEAT
+    DISPLAY "Select a difficulty:"
+    DISPLAY "1) Easy"
+    DISPLAY "2) Medium"
+    DISPLAY "3) Hard"
+    INPUT difficulty_choice
+
+    IF difficulty_choice = 1 THEN
+        num_questions ← 5
+        max_num ← 10
+        DISPLAY "Easy mode selected!"
+        EXIT LOOP
+    ELSE IF difficulty_choice = 2 THEN
+        num_questions ← 10
+        max_num ← 20
+        DISPLAY "Medium mode selected!"
+        EXIT LOOP
+    ELSE IF difficulty_choice = 3 THEN
+        num_questions ← 15
+        max_num ← 50
+        DISPLAY "Hard mode selected!"
+        EXIT LOOP
+    ELSE
+        DISPLAY "Invalid choice! Enter 1, 2, or 3."
+    END IF
+UNTIL valid difficulty chosen
+
+# ---------------- Initialize Variables ---------------- #
+score ← 0
+correctness_list ← empty list
+time_list ← empty list
+
+# ---------------- Loop through each question ---------------- #
+FOR question_number FROM 1 TO num_questions DO
+
+    DISPLAY "Score: " + score
+    DISPLAY "Question " + question_number + " of " + num_questions
+
+    # Generate question
+    IF question_number = num_questions THEN
+        DISPLAY "Challenge question!"
+        num1 ← random number between max_num and (max_num * 2)
+        num2 ← random number between max_num and (max_num * 2)
+    ELSE
+        num1 ← random number between (max_num / 2) and max_num
+        num2 ← random number between (max_num / 2) and max_num
+    END IF
+
+    operator ← random choice of "+" or "-"
+    question ← "num1 operator num2"
+
+    # Ask the user
+    START TIMER
+    DISPLAY "What is " + question + "?"
+    INPUT user_answer
+    STOP TIMER
+
+    time_taken ← time difference
+    correct_answer ← evaluate(question)
+
+    # Check answer
+    IF user_answer = correct_answer THEN
+        correctness_list.ADD(True)
+        time_list.ADD(time_taken)
+
+        points_awarded ← (10 - time_taken)
+        IF points_awarded < 1 THEN
+            points_awarded ← 1
+        END IF
+
+        score ← score + points_awarded
+        DISPLAY "Correct! You answered in " + time_taken + " second(s)"
+        DISPLAY points_awarded + " point(s) awarded."
+    ELSE
+        correctness_list.ADD(False)
+        time_list.ADD(time_taken)
+        DISPLAY "Incorrect! You answered in " + time_taken + " second(s)"
+        DISPLAY "No points awarded."
+    END IF
+
+END FOR
+
+# ---------------- Show Results ---------------- #
+total_correct ← COUNT(True in correctness_list)
+percentage_correct ← (total_correct / num_questions) * 100
+average_time ← AVERAGE(time_list)
+
+DISPLAY "Results:"
+DISPLAY "Final score: " + score
+DISPLAY "Correct answers: " + percentage_correct + "%"
+DISPLAY "Average response time: " + average_time + "s"
+
+DISPLAY "Breakdown:"
+DISPLAY "Question   Correct   Time"
+FOR i FROM 1 TO num_questions DO
+    IF correctness_list[i] = True THEN
+        correct_str ← "Yes"
+    ELSE
+        correct_str ← "No"
+    END IF
+    DISPLAY i + "          " + correct_str + "        " + time_list[i] + "s"
+END FOR
+
+END PROGRAM
